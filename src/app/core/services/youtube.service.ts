@@ -2,24 +2,7 @@ import { Service, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
 import { switchMap, take } from 'rxjs/operators';
-
-export interface YouTubeVideo {
-  id: { videoId: string } | string;
-  snippet: {
-    title: string;
-    description: string;
-    thumbnails: {
-      default: { url: string };
-      medium: { url: string };
-      high: { url: string };
-    };
-    channelTitle: string;
-  };
-}
-
-export interface YouTubeSearchResponse {
-  items: YouTubeVideo[];
-}
+import { YouTubeVideo, YouTubeSearchResponse } from '../interfaces/youtube.interface';
 
 @Service()
 export class YouTubeService {

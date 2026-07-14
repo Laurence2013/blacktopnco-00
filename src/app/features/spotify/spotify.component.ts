@@ -1,0 +1,276 @@
+import { Component, inject, signal, computed } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+import { SpotifyService } from '../../core/services/spotify.service';
+import { SpotifyTrack } from '../../core/services/spotify.service';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
+
+@Component({
+  selector: 'app-spotify',
+  imports: [CommonModule, FormsModule],
+  template: `
+    <div class="min-h-screen bg-slate-950 text-slate-100 p-6 font-sans">
+      <!-- Header -->
+      <div class="max-w-6xl mx-auto mb-8">
+        <h2 class="text-4xl font-extrabold tracking-tight bg-gradient-to-r from-emerald-500 to-teal-400 bg-clip-text text-transparent mb-2">
+          Spotify Streaming Deck
+        </h2>
+        <p class="text-slate-400">Search and preview track audio streams directly from the Spotify network.</p>
+      </div>
+
+      <!-- Config & Search Section -->
+      <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- API Setup Card -->
+        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-5 backdrop-blur-xl shadow-2xl">
+          <h3 class="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-emerald-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+            </svg>
+            Authentication
+          </h3>
+          <div class="space-y-4">
+            <div>
+              <label for="accessToken" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">OAuth Access Token</label>
+              <input
+                id="accessToken"
+                type="password"
+                [(ngModel)]="rawToken"
+                placeholder="Paste Bearer Token..."
+                class="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
+              />
+            </div>
+            <button
+              (click)="saveAccessToken()"
+              class="w-full bg-gradient-to-r from-emerald-600 to-emerald-500 hover:from-emerald-500 hover:to-emerald-400 text-white font-medium py-2.5 px-4 rounded-xl transition shadow-lg shadow-emerald-950/30 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+            >
+              Update Access Token
+            </button>
+            @if (tokenSaved()) {
+              <p class="text-xs text-emerald-400 text-center flex items-center justify-center gap-1">
+                ✔ Credentials saved
+              </p>
+            }
+          </div>
+        </div>
+
+        <!-- Search Controls -->
+        <div class="bg-slate-900/50 border border-slate-800 rounded-2xl p-5 backdrop-blur-xl shadow-2xl md:col-span-2">
+          <h3 class="text-lg font-semibold text-slate-200 mb-4 flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-emerald-500">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 1 1-3 0m3 0a1.5 1.5 0 1 0-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m-9.75 0h9.75" />
+            </svg>
+            Music Finder
+          </h3>
+          <div class="space-y-4">
+            <div>
+              <label for="searchQuery" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">Track or Artist Name</label>
+              <input
+                id="searchQuery"
+                type="text"
+                [(ngModel)]="searchQuery"
+                placeholder="Search Lofi, Jazz, Synthwave..."
+                (keyup.enter)="executeSearch()"
+                class="w-full bg-slate-950/80 border border-slate-800 rounded-xl px-4 py-2.5 text-sm text-slate-200 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 focus:border-emerald-500 transition"
+              />
+            </div>
+            <div class="flex items-center justify-between pt-2">
+              <div class="flex items-center gap-2">
+                <label for="limit" class="text-xs text-slate-400 font-semibold uppercase">Limit:</label>
+                <select
+                  id="limit"
+                  [(ngModel)]="limit"
+                  class="bg-slate-950 border border-slate-800 rounded-lg px-2 py-1 text-xs text-slate-300 focus:outline-none focus:ring-1 focus:ring-emerald-500"
+                >
+                  <option [value]="6">6</option>
+                  <option [value]="12">12</option>
+                  <option [value]="18">18</option>
+                </select>
+              </div>
+              <button
+                (click)="executeSearch()"
+                class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2 px-6 rounded-xl transition shadow-lg shadow-emerald-950/20 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
+              >
+                Search Tracks
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Error Message -->
+      @if (errorMessage()) {
+        <div class="max-w-6xl mx-auto mb-6 bg-red-950/40 border border-red-800/80 text-red-200 p-4 rounded-2xl text-sm flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 text-red-400">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m9-.75a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 3.75h.008v.008H12v-.008Z" />
+          </svg>
+          {{ errorMessage() }}
+        </div>
+      }
+
+      <!-- Results Grid -->
+      <div class="max-w-6xl mx-auto">
+        @if (isLoading()) {
+          <div class="flex flex-col items-center justify-center py-20 gap-4">
+            <div class="w-10 h-10 border-4 border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
+            <p class="text-slate-400 text-sm">Communicating with Spotify Metadata Services...</p>
+          </div>
+        } @else if (tracks().length > 0) {
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            @for (track of tracks(); track track.id) {
+              <div
+                (click)="playTrack(track)"
+                class="group bg-slate-900/40 border border-slate-800/80 hover:border-emerald-500/40 rounded-2xl overflow-hidden cursor-pointer transition duration-300 transform hover:-translate-y-1 shadow-xl hover:shadow-emerald-950/10 flex flex-col justify-between"
+              >
+                <div>
+                  <!-- Album Cover -->
+                  <div class="relative aspect-square bg-slate-950 overflow-hidden">
+                    <img
+                      [src]="track.album.images[0]?.url"
+                      [alt]="track.name"
+                      class="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                    />
+                    <div class="absolute inset-0 bg-slate-950/40 opacity-0 group-hover:opacity-100 transition duration-300 flex items-center justify-center">
+                      <div class="w-12 h-12 bg-emerald-500 rounded-full flex items-center justify-center text-white shadow-xl transform scale-90 group-hover:scale-100 transition duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                          <path fill-rule="evenodd" d="M4.5 5.653c0-1.427 1.529-2.33 2.779-1.643l11.54 6.347c1.295.712 1.295 2.573 0 3.286L7.28 19.99c-1.25.687-2.779-.217-2.779-1.643V5.653Z" clip-rule="evenodd" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Track Details -->
+                  <div class="p-5">
+                    <h4 class="font-bold text-slate-100 line-clamp-1 mb-1 group-hover:text-emerald-400 transition">{{ track.name }}</h4>
+                    <p class="text-xs text-emerald-500 font-semibold mb-2">
+                      {{ getArtistsList(track) }}
+                    </p>
+                    <p class="text-xs text-slate-400 line-clamp-1">Album: {{ track.album.name }}</p>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        } @else {
+          <div class="text-center py-20 bg-slate-900/20 border border-slate-900/60 rounded-2xl">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor" class="w-12 h-12 text-slate-600 mx-auto mb-4">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 9l10.5-3m0 0L21 9m-1.5-3v13.5m-4.5-6H4.5M9 9V4.5M4.5 9h9M9 13.5v4.5M4.5 13.5h9m-9 4.5h9" />
+            </svg>
+            <p class="text-slate-400">No tracks loaded. Set your OAuth token and search above.</p>
+          </div>
+        }
+      </div>
+
+      <!-- Sticky Footer Player Widget -->
+      @if (activeTrack()) {
+        <div class="fixed bottom-6 left-6 right-6 z-50 max-w-4xl mx-auto bg-slate-900/90 border border-slate-800 rounded-3xl p-4 shadow-2xl backdrop-blur-md animate-slide-up flex flex-col md:flex-row items-center justify-between gap-4">
+          <div class="flex items-center gap-4 w-full md:w-auto">
+            <img
+              [src]="activeTrack()?.album?.images?.[0]?.url"
+              class="w-16 h-16 rounded-xl object-cover border border-slate-800"
+              alt="Playing Track"
+            />
+            <div class="min-w-0">
+              <h5 class="text-sm font-bold text-slate-100 truncate">{{ activeTrack()?.name }}</h5>
+              <p class="text-xs text-slate-400 truncate">{{ activeTrack() ? getArtistsList(activeTrack()!) : '' }}</p>
+            </div>
+            <button
+              (click)="closePlayer()"
+              class="ml-auto md:hidden p-2 text-slate-400 hover:text-white rounded-full bg-slate-950/40"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="w-full md:w-[450px] h-[80px]">
+            <iframe
+              [src]="activeEmbedUrl()"
+              width="100%"
+              height="80"
+              frameborder="0"
+              allowtransparency="true"
+              allow="encrypted-media"
+              class="rounded-xl"
+            ></iframe>
+          </div>
+
+          <button
+            (click)="closePlayer()"
+            class="hidden md:block p-2.5 bg-slate-950/60 hover:bg-slate-950 text-slate-400 hover:text-white rounded-full transition focus:outline-none"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </div>
+      }
+    </div>
+  `,
+})
+export class SpotifyComponent {
+  private spotifyService = inject(SpotifyService);
+  private sanitizer = inject(DomSanitizer);
+
+  rawToken = '';
+  searchQuery = '';
+  limit = 12;
+
+  tokenSaved = signal(false);
+  isLoading = signal(false);
+  errorMessage = signal<string | null>(null);
+  tracks = signal<SpotifyTrack[]>([]);
+
+  activeTrack = signal<SpotifyTrack | null>(null);
+
+  activeEmbedUrl = computed<SafeResourceUrl | null>(() => {
+    const track = this.activeTrack();
+    if (!track) return null;
+    const url = `https://open.spotify.com/embed/track/${track.id}`;
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
+  });
+
+  saveAccessToken(): void {
+    if (this.rawToken.trim()) {
+      this.spotifyService.setAccessToken(this.rawToken.trim());
+      this.tokenSaved.set(true);
+      this.errorMessage.set(null);
+    }
+  }
+
+  executeSearch(): void {
+    if (!this.spotifyService.getAccessToken()) {
+      this.errorMessage.set('Please save your OAuth Access Token first to authenticate requests.');
+      return;
+    }
+    if (!this.searchQuery.trim()) {
+      this.errorMessage.set('Please enter a search query.');
+      return;
+    }
+
+    this.isLoading.set(true);
+    this.errorMessage.set(null);
+
+    this.spotifyService.searchTracks(this.searchQuery, this.limit).subscribe({
+      next: (response) => {
+        this.tracks.set(response.tracks?.items || []);
+        this.isLoading.set(false);
+      },
+      error: (err) => {
+        this.errorMessage.set(err.message || 'An error occurred while fetching Spotify tracks.');
+        this.isLoading.set(false);
+      }
+    });
+  }
+
+  getArtistsList(track: SpotifyTrack): string {
+    return track.artists.map((a) => a.name).join(', ');
+  }
+
+  playTrack(track: SpotifyTrack): void {
+    this.activeTrack.set(track);
+  }
+
+  closePlayer(): void {
+    this.activeTrack.set(null);
+  }
+}
