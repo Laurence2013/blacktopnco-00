@@ -8,18 +8,16 @@ import { YouTubeVideo, YouTubeSearchResponse } from '../interfaces/youtube.inter
 export class YouTubeService {
   private http = inject(HttpClient);
   private readonly baseUrl = 'https://www.googleapis.com/youtube/v3';
-
   private apiKeySubject = new BehaviorSubject<string | null>(null);
-  apiKey$ = this.apiKeySubject.asObservable();
 
-  setApiKey(key: string): void {
+  public apiKey$ = this.apiKeySubject.asObservable();
+
+  public setApiKey(key: string): void {
     this.apiKeySubject.next(key);
   }
-
-  getApiKey(): string | null {
+	public getApiKey(): string | null {
     return this.apiKeySubject.value;
   }
-
   private getApiKeyStream(): Observable<string> {
     return this.apiKey$.pipe(
       take(1),
@@ -36,7 +34,7 @@ export class YouTubeService {
    * Enhanced Core Search Method
    * Added support for videoDuration and videoEmbeddable parameters
    */
-  searchVideos(
+  public searchVideos(
     query: string, 
     maxResults = 10, 
     duration?: 'long' | 'medium' | 'short', 
@@ -67,15 +65,14 @@ export class YouTubeService {
    * Specific helper to fetch quiet, atmospheric walking videos.
    * Automates the exclusion of loud talking vlogs, reviews, and guides.
    */
-  fetchWalkingMoments(subcategoryQuery: string, maxResults = 10): Observable<YouTubeSearchResponse> {
+  public fetchWalkingMoments(subcategoryQuery: string, maxResults = 10): Observable<YouTubeSearchResponse> {
     const excludeNoise = ' -vlog -talking -review -guide -narrated -interview -talk';
     const fullQuery = `${subcategoryQuery}${excludeNoise}`;
 
     // Forces long-form (>20 mins) and embeddable assets only
     return this.searchVideos(fullQuery, maxResults, 'long', true);
   }
-
-  getVideoDetails(videoId: string): Observable<unknown> {
+  public getVideoDetails(videoId: string): Observable<unknown> {
     return this.getApiKeyStream().pipe(
       switchMap(key => {
         const params = new HttpParams()
