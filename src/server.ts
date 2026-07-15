@@ -1,16 +1,11 @@
 import 'dotenv/config';
-import {
-  AngularNodeAppEngine,
-  createNodeRequestHandler,
-  isMainModule,
-  writeResponseToNodeResponse,
-} from '@angular/ssr/node';
+import {AngularNodeAppEngine, createNodeRequestHandler, isMainModule, writeResponseToNodeResponse} from '@angular/ssr/node';
 import express from 'express';
 import { join } from 'node:path';
 
 const browserDistFolder = join(import.meta.dirname, '../browser');
 
-const app = express();
+export const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
@@ -41,7 +36,6 @@ app.get('/api/youtube/search', async (req: express.Request, res: express.Respons
       res.status(response.status).json({ error: errText });
       return;
     }
-
     const data = await response.json();
     res.json(data);
   } catch (error: any) {
