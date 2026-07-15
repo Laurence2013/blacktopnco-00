@@ -14,36 +14,34 @@ export class YouTubeComponent {
   private ytService = inject(YouTubeService);
   private sanitizer = inject(DomSanitizer);
 
-  searchQuery = '';
-  duration?: 'long' | 'medium' | 'short' = undefined;
-  embeddableOnly = true;
+  public searchQuery = '';
+  public duration?: 'long' | 'medium' | 'short' = undefined;
+  public embeddableOnly = true;
 
-  isLoading = signal(false);
-  errorMessage = signal<string | null>(null);
-  videos = signal<YouTubeVideo[]>([]);
+  public isLoading = signal(false);
+  public errorMessage = signal<string | null>(null);
+  public videos = signal<YouTubeVideo[]>([]);
 
-  activeVideo = signal<YouTubeVideo | null>(null);
+  public activeVideo = signal<YouTubeVideo | null>(null);
 
-  activeEmbedUrl = computed<SafeResourceUrl | null>(() => {
+  public activeEmbedUrl = computed<SafeResourceUrl | null>(() => {
     const video = this.activeVideo();
     if (!video) return null;
     const id = this.videoIdOf(video);
     const url = `https://www.youtube.com/embed/${id}?autoplay=1`;
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   });
-
-  executeSearch(): void {
+  public executeSearch(): void {
     if (!this.searchQuery.trim()) {
       this.errorMessage.set('Please enter a search query.');
       return;
     }
-
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
     this.ytService.searchVideos(
       this.searchQuery,
-      12,
+      24,
       this.duration,
       this.embeddableOnly
     ).subscribe({
@@ -58,13 +56,12 @@ export class YouTubeComponent {
       }
     });
   }
-
-  fetchAtmosphericWalking(): void {
+  public fetchAtmosphericWalking(): void {
     this.isLoading.set(true);
     this.errorMessage.set(null);
     this.searchQuery = 'Tokyo rain walking';
 
-    this.ytService.fetchWalkingMoments(this.searchQuery, 12).subscribe({
+    this.ytService.fetchWalkingMoments(this.searchQuery, 24).subscribe({
       next: (response) => {
         this.videos.set(response.items || []);
         this.isLoading.set(false);
@@ -76,19 +73,16 @@ export class YouTubeComponent {
       }
     });
   }
-
-  videoIdOf(video: YouTubeVideo): string {
+  public videoIdOf(video: YouTubeVideo): string {
     if (typeof video.id === 'object') {
       return video.id.videoId;
     }
     return video.id;
   }
-
-  openPlayer(video: YouTubeVideo): void {
+  public openPlayer(video: YouTubeVideo): void {
     this.activeVideo.set(video);
   }
-
-  closePlayer(): void {
+  public closePlayer(): void {
     this.activeVideo.set(null);
   }
 }

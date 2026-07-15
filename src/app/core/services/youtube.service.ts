@@ -15,7 +15,7 @@ export class YouTubeService {
    */
   searchVideos(
     query: string, 
-    maxResults = 10, 
+    maxResults = 24, 
     duration?: 'long' | 'medium' | 'short', 
     embeddableOnly = false
   ): Observable<YouTubeSearchResponse> {
@@ -33,7 +33,7 @@ export class YouTubeService {
    * Specific helper to fetch quiet, atmospheric walking videos.
    * Automates the exclusion of loud talking vlogs, reviews, and guides.
    */
-  fetchWalkingMoments(subcategoryQuery: string, maxResults = 10): Observable<YouTubeSearchResponse> {
+  fetchWalkingMoments(subcategoryQuery: string, maxResults = 24): Observable<YouTubeSearchResponse> {
     const excludeNoise = ' -vlog -talking -review -guide -narrated -interview -talk';
     const fullQuery = `${subcategoryQuery}${excludeNoise}`;
 

@@ -14,7 +14,6 @@ const angularApp = new AngularNodeAppEngine();
 app.get('/api/youtube/search', async (req: express.Request, res: express.Response) => {
   try {
     const { q, maxResults, videoDuration, videoEmbeddable } = req.query;
-		console.log(maxResults);
     const apiKey = process.env['YOUTUBE_API_KEY'];
     if (!apiKey || apiKey === 'YOUR_YOUTUBE_API_KEY_HERE') {
       res.status(500).json({ error: 'YouTube API Key is not configured on the server. Please define YOUTUBE_API_KEY in your .env file.' });
@@ -27,7 +26,8 @@ app.get('/api/youtube/search', async (req: express.Request, res: express.Respons
     url.searchParams.set('key', apiKey);
     
     if (q) url.searchParams.set('q', String(q));
-    if (maxResults) url.searchParams.set('maxResults', String(maxResults));
+    const resultsLimit = maxResults ? String(maxResults) : '24';
+    url.searchParams.set('maxResults', resultsLimit);
     if (videoDuration) url.searchParams.set('videoDuration', String(videoDuration));
     if (videoEmbeddable) url.searchParams.set('videoEmbeddable', String(videoEmbeddable));
 
