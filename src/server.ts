@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import {
   AngularNodeAppEngine,
   createNodeRequestHandler,
@@ -13,16 +14,69 @@ const app = express();
 const angularApp = new AngularNodeAppEngine();
 
 /**
- * Example Express Rest API endpoints can be defined here.
- * Uncomment and define endpoints as necessary.
- *
- * Example:
- * ```ts
- * app.get('/api/{*splat}', (req, res) => {
- *   // Handle API request
- * });
- * ```
+ * YouTube API Proxy Endpoints
  */
+app.get('/api/youtube/search', async (req: express.Request, res: express.Response) => {
+  try {
+    const { q, maxResults, videoDuration, videoEmbeddable } = req.query;
+    const apiKey = process.env['YOUTUBE_API_KEY'];
+    if (!apiKey || apiKey === 'YOUR_YOUTUBE_API_KEY_HERE') {
+      res.status(500).json({ error: 'YouTube API Key is not configured on the server. Please define YOUTUBE_API_KEY in your .env file.' });
+      return;
+    }
+
+    const url = new URL('https://www.googleapis.com/youtube/v3/search');
+    url.searchParams.set('part', 'snippet');
+    url.searchParams.set('type', 'video');
+    url.searchParams.set('key', apiKey);
+    
+    if (q) url.searchParams.set('q', String(q));
+    if (maxResults) url.searchParams.set('maxResults', String(maxResults));
+    if (videoDuration) url.searchParams.set('videoDuration', String(videoDuration));
+    if (videoEmbeddable) url.searchParams.set('videoEmbeddable', String(videoEmbeddable));
+
+    const response = await fetch(url.toString());
+    if (!response.ok) {
+      const errText = await response.text();
+      res.status(response.status).json({ error: errText });
+      return;
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
+
+app.get('/api/youtube/videos', async (req: express.Request, res: express.Response) => {
+  try {
+    const { id } = req.query;
+    const apiKey = process.env['YOUTUBE_API_KEY'];
+    if (!apiKey || apiKey === 'YOUR_YOUTUBE_API_KEY_HERE') {
+      res.status(500).json({ error: 'YouTube API Key is not configured on the server. Please define YOUTUBE_API_KEY in your .env file.' });
+      return;
+    }
+
+    const url = new URL('https://www.googleapis.com/youtube/v3/videos');
+    url.searchParams.set('part', 'snippet,statistics');
+    url.searchParams.set('key', apiKey);
+    
+    if (id) url.searchParams.set('id', String(id));
+
+    const response = await fetch(url.toString());
+    if (!response.ok) {
+      const errText = await response.text();
+      res.status(response.status).json({ error: errText });
+      return;
+    }
+
+    const data = await response.json();
+    res.json(data);
+  } catch (error: any) {
+    res.status(500).json({ error: error.message || 'Internal server error' });
+  }
+});
 
 /**
  * Serve static files from /browser

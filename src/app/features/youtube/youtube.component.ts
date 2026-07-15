@@ -14,12 +14,10 @@ export class YouTubeComponent {
   private ytService = inject(YouTubeService);
   private sanitizer = inject(DomSanitizer);
 
-  rawApiKey = '';
   searchQuery = '';
   duration?: 'long' | 'medium' | 'short' = undefined;
   embeddableOnly = true;
 
-  apiKeySaved = signal(false);
   isLoading = signal(false);
   errorMessage = signal<string | null>(null);
   videos = signal<YouTubeVideo[]>([]);
@@ -34,19 +32,7 @@ export class YouTubeComponent {
     return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   });
 
-  saveApiKey(): void {
-    if (this.rawApiKey.trim()) {
-      this.ytService.setApiKey(this.rawApiKey.trim());
-      this.apiKeySaved.set(true);
-      this.errorMessage.set(null);
-    }
-  }
-
   executeSearch(): void {
-    if (!this.ytService.getApiKey()) {
-      this.errorMessage.set('Please save your API Key first to authenticate requests.');
-      return;
-    }
     if (!this.searchQuery.trim()) {
       this.errorMessage.set('Please enter a search query.');
       return;
@@ -66,18 +52,14 @@ export class YouTubeComponent {
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage.set(err.message || 'An error occurred while fetching videos.');
+        const backendError = err.error?.error || err.message;
+        this.errorMessage.set(backendError || 'An error occurred while fetching videos.');
         this.isLoading.set(false);
       }
     });
   }
 
   fetchAtmosphericWalking(): void {
-    if (!this.ytService.getApiKey()) {
-      this.errorMessage.set('Please save your API Key first.');
-      return;
-    }
-
     this.isLoading.set(true);
     this.errorMessage.set(null);
     this.searchQuery = 'Tokyo rain walking';
@@ -88,7 +70,8 @@ export class YouTubeComponent {
         this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage.set(err.message || 'An error occurred while fetching atmospheric content.');
+        const backendError = err.error?.error || err.message;
+        this.errorMessage.set(backendError || 'An error occurred while fetching atmospheric content.');
         this.isLoading.set(false);
       }
     });
