@@ -23,12 +23,8 @@ export class YouTubeService {
       .set('q', query)
       .set('maxResults', maxResults.toString());
 
-    if (duration) {
-      params = params.set('videoDuration', duration);
-    }
-    if (embeddableOnly) {
-      params = params.set('videoEmbeddable', 'true');
-    }
+    if (duration) params = params.set('videoDuration', duration);
+    if (embeddableOnly) params = params.set('videoEmbeddable', 'true');
 
     return this.http.get<YouTubeSearchResponse>(`${this.baseUrl}/search`, { params });
   }
