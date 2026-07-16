@@ -1,0 +1,219 @@
+{
+	"id": "6fcf5d41-1743-4e2d-9207-85a8b6d43e83",
+	"name": "blacktopnco",
+	"timestamp": "2026-07-16T19:09:38.710Z",
+	"collection_id": "10867444-54bbea0f-0fe9-425e-95b0-a2e1b8622e00",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 35,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2026-07-16T19:09:31.161Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "618c536b-9399-49ac-8ce8-c4361928c605",
+			"name": "pov-inside-car",
+			"url": "http://localhost:4200/api/youtube/search?q=pov%20inside%20car",
+			"time": 291,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				327,
+				340,
+				420,
+				315,
+				291
+			],
+			"allTests": [
+				{},
+				{},
+				{},
+				{},
+				{}
+			]
+		},
+		{
+			"id": "ff8fd6b7-dd93-459a-9cc6-0acb84965ab2",
+			"name": "automate-with-the-tests-tab",
+			"url": "http://localhost:4200/api/youtube/search?q=lofi",
+			"time": 366,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {
+				"Content-Type header is application/json": true,
+				"Status code is 200 OK": true,
+				"Status code is not 404": true,
+				"Response time is less than 800ms": true,
+				"Response has YouTube items array": true,
+				"First item contains mandatory YouTube metadata": true,
+				"Response matches YouTube minimal JSON Schema": true
+			},
+			"testPassFailCounts": {
+				"Content-Type header is application/json": {
+					"pass": 5,
+					"fail": 0
+				},
+				"Status code is 200 OK": {
+					"pass": 5,
+					"fail": 0
+				},
+				"Status code is not 404": {
+					"pass": 5,
+					"fail": 0
+				},
+				"Response time is less than 800ms": {
+					"pass": 5,
+					"fail": 0
+				},
+				"Response has YouTube items array": {
+					"pass": 5,
+					"fail": 0
+				},
+				"First item contains mandatory YouTube metadata": {
+					"pass": 5,
+					"fail": 0
+				},
+				"Response matches YouTube minimal JSON Schema": {
+					"pass": 5,
+					"fail": 0
+				}
+			},
+			"times": [
+				332,
+				336,
+				352,
+				315,
+				366
+			],
+			"allTests": [
+				{
+					"Content-Type header is application/json": true,
+					"Status code is 200 OK": true,
+					"Status code is not 404": true,
+					"Response time is less than 800ms": true,
+					"Response has YouTube items array": true,
+					"First item contains mandatory YouTube metadata": true,
+					"Response matches YouTube minimal JSON Schema": true
+				},
+				{
+					"Content-Type header is application/json": true,
+					"Status code is 200 OK": true,
+					"Status code is not 404": true,
+					"Response time is less than 800ms": true,
+					"Response has YouTube items array": true,
+					"First item contains mandatory YouTube metadata": true,
+					"Response matches YouTube minimal JSON Schema": true
+				},
+				{
+					"Content-Type header is application/json": true,
+					"Status code is 200 OK": true,
+					"Status code is not 404": true,
+					"Response time is less than 800ms": true,
+					"Response has YouTube items array": true,
+					"First item contains mandatory YouTube metadata": true,
+					"Response matches YouTube minimal JSON Schema": true
+				},
+				{
+					"Content-Type header is application/json": true,
+					"Status code is 200 OK": true,
+					"Status code is not 404": true,
+					"Response time is less than 800ms": true,
+					"Response has YouTube items array": true,
+					"First item contains mandatory YouTube metadata": true,
+					"Response matches YouTube minimal JSON Schema": true
+				},
+				{
+					"Content-Type header is application/json": true,
+					"Status code is 200 OK": true,
+					"Status code is not 404": true,
+					"Response time is less than 800ms": true,
+					"Response has YouTube items array": true,
+					"First item contains mandatory YouTube metadata": true,
+					"Response matches YouTube minimal JSON Schema": true
+				}
+			]
+		},
+		{
+			"id": "d2494af1-1de3-4023-800c-189afc5babbc",
+			"name": "environment-n-variables",
+			"url": "http://localhost:4200/api/youtube/search?q=lofi",
+			"time": 263,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				304,
+				356,
+				288,
+				412,
+				263
+			],
+			"allTests": [
+				{},
+				{},
+				{},
+				{},
+				{}
+			]
+		},
+		{
+			"id": "2b4751f0-0b86-48f5-be13-d5695a8feebc",
+			"name": "bullk-testing",
+			"url": "http://localhost:4200/api/youtube/search?q=",
+			"time": 202,
+			"responseCode": {
+				"code": 200,
+				"name": "OK"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				428,
+				384,
+				353,
+				331,
+				202
+			],
+			"allTests": [
+				{},
+				{},
+				{},
+				{},
+				{}
+			]
+		}
+	],
+	"count": 5,
+	"totalTime": 6715,
+	"collection": {
+		"requests": [
+			{
+				"id": "618c536b-9399-49ac-8ce8-c4361928c605",
+				"method": "GET"
+			},
+			{
+				"id": "ff8fd6b7-dd93-459a-9cc6-0acb84965ab2",
+				"method": "GET"
+			},
+			{
+				"id": "d2494af1-1de3-4023-800c-189afc5babbc",
+				"method": "GET"
+			},
+			{
+				"id": "2b4751f0-0b86-48f5-be13-d5695a8feebc",
+				"method": "GET"
+			}
+		]
+	}
+}

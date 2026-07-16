@@ -1,0 +1,52 @@
+{
+	"id": "f9c17875-be41-46de-a38b-4ede19741bd4",
+	"name": "blacktopnco",
+	"timestamp": "2026-07-16T19:25:48.967Z",
+	"collection_id": "10867444-54bbea0f-0fe9-425e-95b0-a2e1b8622e00",
+	"folder_id": 0,
+	"environment_id": "0",
+	"totalPass": 0,
+	"delay": 0,
+	"persist": true,
+	"status": "finished",
+	"startedAt": "2026-07-16T19:25:47.679Z",
+	"totalFail": 0,
+	"results": [
+		{
+			"id": "2b4751f0-0b86-48f5-be13-d5695a8feebc",
+			"name": "bullk-testing",
+			"url": "http://localhost:4200/api/youtube/search?q=",
+			"time": 27,
+			"responseCode": {
+				"code": 429,
+				"name": "Too Many Requests"
+			},
+			"tests": {},
+			"testPassFailCounts": {},
+			"times": [
+				124,
+				307,
+				34,
+				262,
+				27
+			],
+			"allTests": [
+				{},
+				{},
+				{},
+				{},
+				{}
+			]
+		}
+	],
+	"count": 5,
+	"totalTime": 754,
+	"collection": {
+		"requests": [
+			{
+				"id": "2b4751f0-0b86-48f5-be13-d5695a8feebc",
+				"method": "GET"
+			}
+		]
+	}
+}
