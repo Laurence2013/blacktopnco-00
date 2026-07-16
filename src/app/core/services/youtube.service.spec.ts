@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
+import { provideHttpClient } from '@angular/common/http';
 import { YouTubeService } from './youtube.service';
 import { YouTubeSearchResponse } from '../interfaces/youtube.interface';
 
@@ -10,8 +11,11 @@ describe('YouTubeService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [YouTubeService]
+      providers: [
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        YouTubeService
+      ]
     });
     service = TestBed.inject(YouTubeService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -54,4 +58,38 @@ describe('YouTubeService', () => {
     expect(req.request.method).toBe('GET');
     req.flush(mockResponse);
   });
+
+  it('should format search query with exclusions for atmospheric walking moments', () => {
+    const mockResponse: YouTubeSearchResponse = { items: [] };
+
+    service.fetchWalkingMoments('Tokyo rain', 10).subscribe((response) => {
+      expect(response).toEqual(mockResponse);
+    });
+
+    // It should append the vlog/talking noise exclusions and set long duration + embeddable
+    const expectedQuery = 'Tokyo rain -vlog -talking -review -guide -narrated -interview -talk';
+    const req = httpMock.expectOne(
+      (r) =>
+        r.url === '/api/youtube/search' &&
+        r.params.get('q') === expectedQuery &&
+        r.params.get('maxResults') === '10' &&
+        r.params.get('videoDuration') === 'long' &&
+        r.params.get('videoEmbeddable') === 'true'
+    );
+    expect(req.request.method).toBe('GET');
+    req.flush(mockResponse);
+  });
+
+  it('should call the proxy API for specific video details', () => {
+    const mockDetailResponse = { kind: 'youtube#videoListResponse', items: [{ id: 'sF80I-TQiW0' }] };
+
+    service.getVideoDetails('sF80I-TQiW0').subscribe((response) => {
+      expect(response).toEqual(mockDetailResponse);
+    });
+
+    const req = httpMock.expectOne('/api/youtube/videos?id=sF80I-TQiW0');
+    expect(req.request.method).toBe('GET');
+    req.flush(mockDetailResponse);
+  });
 });
+
