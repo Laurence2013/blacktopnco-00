@@ -24,18 +24,12 @@ describe('Footer', () => {
       'Curated Automotive Detailing Products, Car Care Accessories & Air Fresheners',
     );
     expect(text).toContain('FULL PLATFORM LAUNCHING SOON');
-    expect(text).toContain('SHOP NOW');
-    expect(text).toContain('TRADE & SUPPLIER ENQUIRIES');
+    expect(text).not.toContain('SHOP NOW');
+    expect(text).toContain('ENQUIRIES');
     expect(text).toContain('STATUTORY COMPANY INFORMATION');
     expect(text).toContain('Company Registration Number (CRN): 17575573');
     expect(text).toContain('Registered Office: 124 City Road, London, EC1V 2NX');
     expect(text).toContain('© 2026 BlackTop & Co Ltd. All rights reserved.');
-
-    const ebayLink = compiled.querySelector<HTMLAnchorElement>(
-      'a[href="https://www.ebay.co.uk/usr/blacktopnco"]',
-    );
-    expect(ebayLink?.getAttribute('target')).toBe('_blank');
-    expect(ebayLink?.getAttribute('rel')).toBe('noopener noreferrer');
 
     const emailLink = compiled.querySelector<HTMLAnchorElement>('a[href="mailto:trade@blacktopn.co"]');
     expect(emailLink?.textContent).toContain('trade@blacktopn.co');

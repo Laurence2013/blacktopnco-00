@@ -16,42 +16,26 @@
         </p>
       </section>
 
-      <section class="footer-section" aria-labelledby="footer-shop-heading">
-        <h3 id="footer-shop-heading" class="section-heading">SHOP NOW</h3>
-        <p class="section-text">
-          While our full web storefront is in development, browse and order our current range
-          directly through our official eBay Business store:
-          <a
-            class="footer-link"
-            [href]="ebayUrl"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            {{ ebayUrl }}<span class="sr-only"> (opens in a new tab)</span>
-          </a>
-        </p>
-      </section>
-
       <section class="footer-section" aria-labelledby="footer-trade-heading">
-        <h3 id="footer-trade-heading" class="section-heading">TRADE &amp; SUPPLIER ENQUIRIES</h3>
-        <p class="section-text">
+        <h3 id="footer-trade-heading" class="section-heading">ENQUIRIES</h3>
+        <!--<p class="section-text">
           For wholesale, distribution, and B2B trade enquiries, contact our team directly:
-        </p>
+				</p>-->
         <ul class="detail-list">
           <li>
             <span class="detail-label">Email:</span>
             <a class="footer-link" [href]="'mailto:' + tradeEmail">{{ tradeEmail }}</a>
           </li>
           <li>
-            <span class="detail-label">Website:</span>
+            <!--<span class="detail-label">Website:</span>
             <a
               class="footer-link"
               [href]="websiteUrl"
               target="_blank"
               rel="noopener noreferrer"
-            >
-              {{ websiteUrl }}<span class="sr-only"> (opens in a new tab)</span>
-            </a>
+							>
+							{{ websiteUrl }}<span class="sr-only"> (opens in a new tab)</span>
+						</a>-->
           </li>
         </ul>
       </section>
