@@ -1,12 +1,14 @@
 import { Component, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { Footer } from './footer/footer';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, Footer],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('blacktopnco-01');
+  protected readonly title = signal('BlackTop & Co');
+  protected readonly ebayUrl = 'https://www.ebay.co.uk/usr/blacktopnco';
 }

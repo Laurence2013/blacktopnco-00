@@ -1,0 +1,76 @@
+<footer class="site-footer" aria-labelledby="footer-brand">
+  <div class="footer-inner">
+    <div class="footer-brand-block">
+      <h2 id="footer-brand" class="footer-brand">BLACKTOP &amp; CO.</h2>
+      <p class="footer-tagline">
+        Curated Automotive Detailing Products, Car Care Accessories &amp; Air Fresheners
+      </p>
+    </div>
+
+    <div class="footer-grid">
+      <section class="footer-section" aria-labelledby="footer-launching-heading">
+        <h3 id="footer-launching-heading" class="section-heading">FULL PLATFORM LAUNCHING SOON</h3>
+        <p class="section-text">
+          We are building a dedicated e-commerce store and community-driven product comparison hub
+          for car detailing enthusiasts across the UK.
+        </p>
+      </section>
+
+      <section class="footer-section" aria-labelledby="footer-shop-heading">
+        <h3 id="footer-shop-heading" class="section-heading">SHOP NOW</h3>
+        <p class="section-text">
+          While our full web storefront is in development, browse and order our current range
+          directly through our official eBay Business store:
+          <a
+            class="footer-link"
+            [href]="ebayUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {{ ebayUrl }}<span class="sr-only"> (opens in a new tab)</span>
+          </a>
+        </p>
+      </section>
+
+      <section class="footer-section" aria-labelledby="footer-trade-heading">
+        <h3 id="footer-trade-heading" class="section-heading">TRADE &amp; SUPPLIER ENQUIRIES</h3>
+        <p class="section-text">
+          For wholesale, distribution, and B2B trade enquiries, contact our team directly:
+        </p>
+        <ul class="detail-list">
+          <li>
+            <span class="detail-label">Email:</span>
+            <a class="footer-link" [href]="'mailto:' + tradeEmail">{{ tradeEmail }}</a>
+          </li>
+          <li>
+            <span class="detail-label">Website:</span>
+            <a
+              class="footer-link"
+              [href]="websiteUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {{ websiteUrl }}<span class="sr-only"> (opens in a new tab)</span>
+            </a>
+          </li>
+        </ul>
+      </section>
+
+      <section class="footer-section" aria-labelledby="footer-statutory-heading">
+        <h3 id="footer-statutory-heading" class="section-heading">
+          STATUTORY COMPANY INFORMATION
+        </h3>
+        <address class="statutory-info">
+          <p>BlackTop &amp; Co Ltd</p>
+          <p>Registered in England &amp; Wales</p>
+          <p>Company Registration Number (CRN): 17575573</p>
+          <p>Registered Office: 124 City Road, London, EC1V 2NX</p>
+        </address>
+      </section>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copyright">&copy; 2026 BlackTop &amp; Co Ltd. All rights reserved.</p>
+    </div>
+  </div>
+</footer>
